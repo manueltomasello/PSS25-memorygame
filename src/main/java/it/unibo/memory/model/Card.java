@@ -56,5 +56,10 @@ public class Card {
         this.matched = true;
         this.faceUp = true;
     }
- 
+
+    // Confronta questa carta con un'altra, sono uguali se hanno lo stesso simbolo
+    public boolean matches(final Card other) {
+        return this.symbol == other.symbol;
+    }
+
 }

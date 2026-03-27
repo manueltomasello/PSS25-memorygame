@@ -3,12 +3,14 @@ package it.unibo.memory.model;
 public class Game {
 
     // I campi — lo "stato" della partita
-    private int moves;         // quante mosse hai fatto
-    private int matchedPairs;  // quante coppie hai trovato
-    private boolean gameOver;  // la partita è finita?
+    private final int totalPairs; // quante coppie ci sono in totale (non cambia mai)
+    private int moves;            // quante mosse hai fatto
+    private int matchedPairs;     // quante coppie hai trovato
+    private boolean gameOver;     // la partita è finita?
 
     // Inizia - nasce una nuova partita
-    public Game() {
+    public Game(final int totalPairs) {
+        this.totalPairs = totalPairs; // salviamo il totale delle coppie
         this.moves = 0;
         this.matchedPairs = 0;
         this.gameOver = false;
@@ -19,19 +21,18 @@ public class Game {
         this.moves++;
     }
 
-    // Segna una coppia trovata
+    // Segna una coppia trovata e controlla se la partita è finita
     public void addMatchedPair() {
-        this.matchedPairs++;
+        this.matchedPairs++;                         //trovo una coppia in più
+        if (this.matchedPairs == this.totalPairs) {  // confronto le coppie trovate, se sono uguali al totale delle coppie, le ho trovate tutte?
+            this.gameOver = true;                    // si!, fine partita
+            
+        }
     }
 
     // Controlla se la partita è finita
     public boolean isGameOver() {
         return this.gameOver;
-    }
-
-    // Segna la partita come finita
-    public void setGameOver() {
-        this.gameOver = true;
     }
 
     // Dimmi quante mosse ho fatto
