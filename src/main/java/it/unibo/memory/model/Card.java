@@ -10,6 +10,14 @@ public class Card {
     private final int symbol;
     private boolean faceUp;
     private boolean matched;
+
+/**
+     * Costruttore a zero argomenti (Richiesto da Lab 02 - Fase 1.2).
+     * Inizializza con un simbolo di default usando 'this'.
+     */
+    public Card() {
+        this(0); // Richiama il costruttore principale (Lab 02 - Fase 1.6)
+    }
  
     /**
      Crea una nuova carta con il simbolo dato (symbol).
