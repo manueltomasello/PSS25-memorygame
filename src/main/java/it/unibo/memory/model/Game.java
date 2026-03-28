@@ -8,6 +8,16 @@ public class Game {
     private int matchedPairs;     // quante coppie hai trovato
     private boolean gameOver;     // la partita è finita?
 
+
+/**
+     * Costruttore di default (Lab 02 - Fase 1.2).
+     * Avvia una partita standard da 8 coppie.
+     */
+    public Game() {
+        this(8); // Uso di this per evitare stato inconsistente (Fase 1.6)
+    }
+
+
     // Inizia - nasce una nuova partita
     public Game(final int totalPairs) {
         this.totalPairs = totalPairs; // salviamo il totale delle coppie
