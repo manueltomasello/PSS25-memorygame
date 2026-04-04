@@ -13,9 +13,8 @@ public class ScoreManager {
     private static final Path SCORE_FILE = Paths.get(System.getProperty("user.home"), FILE_NAME);
     private final Properties props;
 
-    /**
-       mi creo un nuovo scoremanager e  carico 
-     */
+    //richiamo il file e carico 
+     
     public ScoreManager() {
         props = new Properties();
         load();
