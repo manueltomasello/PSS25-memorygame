@@ -1,6 +1,8 @@
 package it.unibo.memory.model;
-//difficoltà 
+
+//difficoltà
 public enum Difficulty {
+    //matrici di 4x4, 6x6 e 8x8 per le difficoltà facile, media e difficile
     EASY(4, 4),
     MEDIUM(6, 6),
     HARD(8, 8);
