@@ -35,13 +35,4 @@ public class Board {
     public int getSize() {
         return cards.length;
     }
-//meccanismo di vittoria, ci serve per vedere quando tutte le coppie sono matchate
-    public boolean allMatched() {
-        for (int i = 0; i < cards.length; i++) {
-            if (!cards[i].isMatched()) {
-                return false;
-            }
-        }
-        return true;
-    }
-}
+//rimosso meccanismo di vittoria, ci pensa il controller
