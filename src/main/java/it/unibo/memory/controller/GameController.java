@@ -36,7 +36,7 @@ public class GameController {
             // È la SECONDA carta! Ora si fa sul serio.
             game.addMove(); // aggiungo una mossa al conteggio globale
 
-            // 1. ECCO LA MAGIA DI STANOTTE: usiamo il nostro equals() per confrontare i simboli!
+            // 1. Uso di equals: usiamo il nostro equals() per confrontare i simboli!
             if (clicked.equals(firstCard)) { 
                 
                 // 2. AGGIORNATO: diciamo alla carta che è stata indovinata (true)
