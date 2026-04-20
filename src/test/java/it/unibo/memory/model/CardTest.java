@@ -7,9 +7,9 @@ class CardTest {
 
     @Test
     void testCardCreation() {
-        Card card = new Card(5); // <-- Qui succede qualcosa...
+        Card card = new Card(5); // Creo  una carta con simbolo 5 per il test
         
-        assertEquals(5, card.getSymbol()); // <-- E qui controlliamo...
+        assertEquals(5, card.getSymbol()); // <-- Verifico che il simbolo sia corretto e la carta sia coperta
         assertFalse(card.isFaceUp());
     }
 }
