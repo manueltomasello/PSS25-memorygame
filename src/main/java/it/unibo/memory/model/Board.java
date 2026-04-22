@@ -6,8 +6,11 @@ public class Board {
 
     private final Card[] cards;
     private final Random rand = new Random();
+    private final Difficulty difficulty;
+
 
     public Board(final Difficulty diff) {
+        this.difficulty = diff;
         this.cards = new Card[diff.totalPairs() * 2];
         genCards(diff.totalPairs());
     }
@@ -34,6 +37,9 @@ public class Board {
 
     public int getSize() {
         return cards.length;
+    }
+    public Difficulty getDifficulty(){
+        return difficulty;
     }
 }
 //rimosso meccanismo di vittoria, ci pensa il controller
