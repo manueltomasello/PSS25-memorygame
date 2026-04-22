@@ -33,7 +33,7 @@ public class GameController {
             firstCard = clicked; // me la salvo in mano e aspetto il secondo click
 
         } else {
-            // È la SECONDA carta! Ora si fa sul serio.
+            // È la SECONDA carta!
             game.addMove(); // aggiungo una mossa al conteggio globale
 
             // 1. Uso di equals: usiamo il nostro equals() per confrontare i simboli!
@@ -52,6 +52,13 @@ public class GameController {
 
             // In ogni caso, il turno è finito, svuoto la mano per il turno successivo
             firstCard = null;
+
+            // Controlla se abbiamo vinto
+            if (game.getMatchedPairs() == board.getDifficulty().getPairs()) {
+                System.out.println("VITTORIA! Tutte le coppie trovate!");
+    
+            }
+
         }
     }
 
