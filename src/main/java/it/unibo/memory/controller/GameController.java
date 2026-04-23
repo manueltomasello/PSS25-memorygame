@@ -54,7 +54,7 @@ public class GameController {
             firstCard = null;
 
             // Controlla se abbiamo vinto
-            if (game.getMatchedPairs() == board.getDifficulty().getPairs()) {
+            if (game.getMatchedPairs() == board.getDifficulty().totalPairs()) {
                 System.out.println("VITTORIA! Tutte le coppie trovate!");
     
             }

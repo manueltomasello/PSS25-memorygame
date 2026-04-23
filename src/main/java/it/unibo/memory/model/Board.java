@@ -6,12 +6,25 @@ public class Board {
 
     private final Card[] cards;
     private final Random rand = new Random();
+    private final Difficulty difficulty; // Variabile salvata per permettere alla View di leggere i dati
 
     public Board(final Difficulty diff) {
-        this.cards = new Card[diff.totalPairs() * 2];
-        genCards(diff.totalPairs());
+        this.difficulty = diff; // Memorizziamo la difficoltà scelta
+        this.cards = new Card[diff.totalCards()]; // Usiamo il totale carte dall'Enum
+        genCards(diff.totalPairs()); // Generiamo le coppie
     }
-     //Organizza e mescola la lista delle carte
+
+    /**
+     * @return la difficoltà della partita, necessaria per conoscere righe e colonne
+     */
+    public Difficulty getDifficulty() {
+        return this.difficulty;
+    }
+
+    /**
+     * Organizza e mescola la lista delle carte.
+     * @param pairs il numero di coppie da generare
+     */
     private void genCards(final int pairs) {
         int index = 0;
         for (int symbol = 0; symbol < pairs; symbol++) {
@@ -20,6 +33,8 @@ public class Board {
             cards[index] = new Card(symbol);
             index++;
         }
+        
+        // Algoritmo di mescolamento (Fisher-Yates)
         for (int i = 0; i < cards.length; i++) {
             int j = rand.nextInt(cards.length);
             Card temp = cards[i];
@@ -29,11 +44,10 @@ public class Board {
     }
 
     public Card getCard(final int index) {
-    return cards[index];
+        return cards[index];
     }
 
     public int getSize() {
         return cards.length;
     }
 }
-//rimosso meccanismo di vittoria, ci pensa il controller
