@@ -1,76 +1,79 @@
 package it.unibo.memory.controller;
 
+import javax.swing.Timer;
 import it.unibo.memory.model.Board;
 import it.unibo.memory.model.Card;
 import it.unibo.memory.model.Game;
 
 public class GameController {
 
-    private final Board board;  // il tabellone con tutte le carte
-    private final Game game;    // lo stato della partita
-    private Card firstCard;     // la prima carta cliccata (null = nessuna carta in mano)
+    private final Board board;
+    private final Game game;
+    private final Runnable onBoardChanged; 
+    private Card firstCard;
+    private boolean waiting; 
 
-    // Nasce il controller, riceve il tabellone e lo stato della partita
-    public GameController(final Board board, final Game game) {
+    public GameController(final Board board, final Game game, final Runnable onBoardChanged) {
         this.board = board;
         this.game = game;
+        this.onBoardChanged = onBoardChanged;
         this.firstCard = null;
+        this.waiting = false;
     }
 
-    // Gestisce il click su una carta
     public void onCardClicked(final int position) {
-        Card clicked = board.getCard(position); // prendo la carta cliccata dal tabellone
+        // Se stiamo aspettando il timer, ignoriamo nuovi click
+        if (waiting) return;
 
-        // Se la carta è già girata o già abbinata, il click va a vuoto
-        if (clicked.isFaceUp() || clicked.isMatched()) {
-            return;
-        }
+        Card clicked = board.getCard(position);
 
-        clicked.flip(); // gira la carta faccia in su
+        // Se la carta è già girata o indovinata, non facciamo nulla
+        if (clicked.isFaceUp() || clicked.isMatched()) return;
 
-        // È la PRIMA carta che scopro nel mio turno?
+        clicked.flip();
+
         if (firstCard == null) {
-            firstCard = clicked; // me la salvo in mano e aspetto il secondo click
-
+            // PRIMA CARTA
+            firstCard = clicked;
+            onBoardChanged.run(); // La mostriamo subito
         } else {
-            // È la SECONDA carta!
-            game.addMove(); // aggiungo una mossa al conteggio globale
+            // SECONDA CARTA
+            game.addMove();
 
-            // 1. Uso di equals: usiamo il nostro equals() per confrontare i simboli!
             if (clicked.equals(firstCard)) {
-                
-                // 2. AGGIORNATO: diciamo alla carta che è stata indovinata (true)
-                clicked.setMatched(true);      
-                firstCard.setMatched(true);    
-                game.addMatchedPair();     // dico a Game che ho trovato una coppia in più
+                // COPPIA TROVATA
+                clicked.setMatched(true);
+                firstCard.setMatched(true);
+                game.addMatchedPair();
+                resetTurn();
+                onBoardChanged.run(); // Diventano verdi/indovinate subito
 
+                if (game.getMatchedPairs() == board.getDifficulty().totalPairs()) {
+                    System.out.println("LOGICA: Partita Terminata!");
+                }
             } else {
-                // 3. AGGIORNATO: usiamo il nostro flip() per rigirarle entrambe a faccia in giù
-                clicked.flip();        
-                firstCard.flip();      
+                // COPPIE DIVERSE
+                onBoardChanged.run(); // Mostriamo la seconda carta prima dell'attesa
+                waiting = true;
+                
+                Timer timer = new Timer(1000, e -> {
+                    clicked.flip();
+                    firstCard.flip();
+                    resetTurn();
+                    onBoardChanged.run(); // Notifica che sono state rigirate
+                });
+                timer.setRepeats(false);
+                timer.start();
             }
-
-            // In ogni caso, il turno è finito, svuoto la mano per il turno successivo
-            firstCard = null;
-
-            // Controlla se abbiamo vinto
-            if (game.getMatchedPairs() == board.getDifficulty().totalPairs()) {
-                System.out.println("VITTORIA! Tutte le coppie trovate!");
-    
-            }
-
         }
     }
 
-    public boolean isGameOver() {
-        return game.isGameOver();
+    private void resetTurn() {
+        this.firstCard = null;
+        this.waiting = false;
     }
 
-    public int getMoves() {
-        return game.getMoves();
-    }
-
-    public int getMatchedPairs() {
-        return game.getMatchedPairs();
-    }
+    public boolean isGameOver() { return game.isGameOver(); }
+    public int getMoves() { return game.getMoves(); }
+    public int getMatchedPairs() { return game.getMatchedPairs(); }
 }
