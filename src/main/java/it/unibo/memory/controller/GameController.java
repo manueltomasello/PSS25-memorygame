@@ -4,6 +4,7 @@ import javax.swing.Timer;
 import it.unibo.memory.model.Board;
 import it.unibo.memory.model.Card;
 import it.unibo.memory.model.Game;
+import it.unibo.memory.view.StatoPanel;
 
 public class GameController {
 
@@ -11,7 +12,8 @@ public class GameController {
     private final Game game;
     private final Runnable onBoardChanged; 
     private Card firstCard;
-    private boolean waiting; 
+    private boolean waiting;
+    private StatoPanel statoPanel; // Il pezzo di Manu
 
     public GameController(final Board board, final Game game, final Runnable onBoardChanged) {
         this.board = board;
@@ -21,50 +23,73 @@ public class GameController {
         this.waiting = false;
     }
 
+    /**
+     * Collega lo StatoPanel al controller per aggiornare mosse e punteggio.
+     */
+    public void setStatoPanel(StatoPanel panel) {
+        this.statoPanel = panel;
+    }
+
     public void onCardClicked(final int position) {
-        // Se stiamo aspettando il timer, ignoriamo nuovi click
         if (waiting) return;
 
         Card clicked = board.getCard(position);
-
-        // Se la carta è già girata o indovinata, non facciamo nulla
         if (clicked.isFaceUp() || clicked.isMatched()) return;
 
         clicked.flip();
 
         if (firstCard == null) {
-            // PRIMA CARTA
+            // PRIMA CARTA GIRATA
             firstCard = clicked;
-            onBoardChanged.run(); // La mostriamo subito
+            onBoardChanged.run();
         } else {
-            // SECONDA CARTA
-            game.addMove();
+            // SECONDA CARTA GIRATA
+            game.addMove(); // Incrementa mosse nel modello
+            
+            // Notifichiamo a Manu che le mosse sono cambiate
+            aggiornaInterfacciaManu();
 
             if (clicked.equals(firstCard)) {
                 // COPPIA TROVATA
                 clicked.setMatched(true);
                 firstCard.setMatched(true);
-                game.addMatchedPair();
+                game.addMatchedPair(); // Incrementa coppie nel modello
+                
+                // Notifichiamo a Manu che le coppie sono cambiate
+                aggiornaInterfacciaManu();
+                
                 resetTurn();
-                onBoardChanged.run(); // Diventano verdi/indovinate subito
+                onBoardChanged.run();
 
                 if (game.getMatchedPairs() == board.getDifficulty().totalPairs()) {
-                    System.out.println("LOGICA: Partita Terminata!");
+                    if (this.statoPanel != null) {
+                        this.statoPanel.setStato("VITTORIA!");
+                    }
                 }
             } else {
                 // COPPIE DIVERSE
-                onBoardChanged.run(); // Mostriamo la seconda carta prima dell'attesa
+                onBoardChanged.run();
                 waiting = true;
                 
                 Timer timer = new Timer(1000, e -> {
                     clicked.flip();
                     firstCard.flip();
                     resetTurn();
-                    onBoardChanged.run(); // Notifica che sono state rigirate
+                    onBoardChanged.run();
                 });
                 timer.setRepeats(false);
                 timer.start();
             }
+        }
+    }
+
+    /**
+     * Metodo di supporto per inviare i dati corretti allo StatoPanel di Manu
+     */
+    private void aggiornaInterfacciaManu() {
+        if (this.statoPanel != null) {
+            this.statoPanel.setMosse(game.getMoves());
+            this.statoPanel.setCoppie(game.getMatchedPairs(), board.getDifficulty().totalPairs());
         }
     }
 
