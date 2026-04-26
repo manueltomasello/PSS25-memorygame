@@ -13,7 +13,7 @@ public class GameController {
     private final Runnable onBoardChanged; 
     private Card firstCard;
     private boolean waiting;
-    private StatoPanel statoPanel; // Il pezzo di Manu
+    private StatoPanel statoPanel; // Riferimento al componente di visualizzazione delle statistiche
 
     public GameController(final Board board, final Game game, final Runnable onBoardChanged) {
         this.board = board;
@@ -46,7 +46,7 @@ public class GameController {
             // SECONDA CARTA GIRATA
             game.addMove(); // Incrementa mosse nel modello
             
-            // Notifichiamo a Manu che le mosse sono cambiate
+            // Aggiorno la logica di visualizzazione dello stato del gioco
             aggiornaInterfacciaManu();
 
             if (clicked.equals(firstCard)) {
@@ -55,7 +55,7 @@ public class GameController {
                 firstCard.setMatched(true);
                 game.addMatchedPair(); // Incrementa coppie nel modello
                 
-                // Notifichiamo a Manu che le coppie sono cambiate
+                
                 aggiornaInterfacciaManu();
                 
                 resetTurn();
@@ -70,7 +70,7 @@ public class GameController {
                 // COPPIE DIVERSE
                 onBoardChanged.run();
                 waiting = true;
-                
+                //Imposto un tempo per evitare che l'utente clicca più carte che siano fuori dalla coppia
                 Timer timer = new Timer(500, e -> {
                     clicked.flip();
                     firstCard.flip();
@@ -84,7 +84,7 @@ public class GameController {
     }
 
     /**
-     * Metodo di supporto per inviare i dati corretti allo StatoPanel di Manu
+     * Metodo di supporto per inviare i dati corretti allo StatoPanel
      */
     private void aggiornaInterfacciaManu() {
         if (this.statoPanel != null) {
