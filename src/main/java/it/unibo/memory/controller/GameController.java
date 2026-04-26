@@ -71,7 +71,7 @@ public class GameController {
                 onBoardChanged.run();
                 waiting = true;
                 
-                Timer timer = new Timer(1000, e -> {
+                Timer timer = new Timer(500, e -> {
                     clicked.flip();
                     firstCard.flip();
                     resetTurn();
