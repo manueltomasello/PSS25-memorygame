@@ -8,7 +8,7 @@ public class Main {
         // SwingUtilities ci assicura che la grafica venga caricata nel modo corretto
         SwingUtilities.invokeLater(() -> {
             MainFrame frame = new MainFrame();
-            // Accendiamo la luce! (Rendiamo visibile la finestra)
+            // Rendiamo visibile la finestr
             frame.setVisible(true);
         });
     }

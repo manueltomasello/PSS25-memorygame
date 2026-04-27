@@ -7,7 +7,7 @@ class GameTest {
 
     @Test
     void testGameLogic() {
-        // 1. SETUP: Usiamo le coppie della difficoltà media di Manu invece di un numero fisso
+        // 1. SETUP: Usiamo le coppie della difficoltà media invece di un numero fisso
         Game game = new Game(Difficulty.MEDIUM.totalPairs()); 
         
         // 2. AZIONE: Aggiungo una mossa
@@ -38,7 +38,7 @@ class GameTest {
         // 3. AZIONE: Troviamo l'ultima coppia
         smallGame.addMatchedPair();
         
-        // 4. VERIFICA FINALE:
+        // 4. VERIFICA FINALE
         assertTrue(smallGame.isGameOver(), "La partita dovrebbe essere finita ora!");
     }
 }
