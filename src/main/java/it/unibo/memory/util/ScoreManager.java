@@ -1,10 +1,11 @@
 package it.unibo.memory.util;
 
-import java.util.Properties;
-import java.io.IOException;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
+
 import it.unibo.memory.model.Difficulty;
 
 /* manager di punteggio, tiene traccia solo quando è eseguito */

@@ -5,6 +5,7 @@ import it.unibo.memory.controller.GameController;
 import it.unibo.memory.model.Board;
 import it.unibo.memory.model.Difficulty;
 import it.unibo.memory.model.Game;
+import it.unibo.memory.util.ScoreManager;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
@@ -49,7 +50,16 @@ public class MainFrame extends JFrame {
 
         final Board board = new Board(difficulty);
         final Game game = new Game(difficulty.totalPairs());
-        final GameController controller = new GameController(board, game, () -> repaint());
+        final ScoreManager scoreManager = new ScoreManager();
+        final GameController controller = new GameController(board, game,
+                () -> repaint(),
+                () -> {
+                    final EndGameDialog dialog = new EndGameDialog(
+                            this, difficulty, game.getMoves(), scoreManager,
+                            () -> avviaPartita(difficulty),
+                            () -> mostraSchermata(MENU_CARD));
+                    dialog.setVisible(true);
+                });
         final StatoPanel stato = new StatoPanel();
         final GamePanel griglia = new GamePanel(board, controller);
         controller.setStatoPanel(stato);
