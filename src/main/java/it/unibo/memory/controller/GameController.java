@@ -10,15 +10,17 @@ public class GameController {
 
     private final Board board;
     private final Game game;
-    private final Runnable onBoardChanged; 
+    private final Runnable onGameOver;
+    private final Runnable onBoardChanged;
     private Card firstCard;
     private boolean waiting;
     private StatoPanel statoPanel; // Riferimento al componente di visualizzazione delle statistiche
 
-    public GameController(final Board board, final Game game, final Runnable onBoardChanged) {
+    public GameController(final Board board, final Game game, final Runnable onBoardChanged, final Runnable onGameOver) {
         this.board = board;
         this.game = game;
         this.onBoardChanged = onBoardChanged;
+        this.onGameOver = onGameOver;
         this.firstCard = null;
         this.waiting = false;
     }
@@ -65,6 +67,7 @@ public class GameController {
                     if (this.statoPanel != null) {
                         this.statoPanel.setStato("VITTORIA!");
                     }
+                    onGameOver.run();
                 }
             } else {
                 // COPPIE DIVERSE
