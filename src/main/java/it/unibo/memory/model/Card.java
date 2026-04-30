@@ -2,9 +2,7 @@ package it.unibo.memory.model;
 
 import java.util.Objects;
 
-/**
- * Questa classe rappresenta la carta, unità principale del gioco.
- */
+/*Questa classe rappresenta la carta, unità principale del gioco.*/
 public class Card {
 
     private final int symbol;
@@ -20,7 +18,7 @@ public class Card {
     }
 
     /**
-     * Crea una nuova carta con il simbolo dato.
+     * Creo una nuova carta con il simbolo dato.
      * La carta inizia coperta e non abbinata.
      */
     public Card(final int symbol) {
@@ -53,14 +51,14 @@ public class Card {
         }
     }
 
-    // --- LOGICA DI CONFRONTO (Richiesta del professore) ---
+    // --- LOGICA DI CONFRONTO (come da richiesta) ---
     
     @Override
     public boolean equals(Object obj) {
         // 1. Se sto confrontando la carta esattamente con se stessa
         if (this == obj) return true;
         
-        // 2. Se l'altra cosa è vuota o non è una Carta
+        // 2. Se l'altro valore è nullo\vuoto non è una Carta
         if (obj == null || getClass() != obj.getClass()) return false;
         
         // 3. Trasformo l'oggetto in "Card" e guardo se il simbolo è lo stesso

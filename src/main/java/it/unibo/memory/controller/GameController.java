@@ -1,57 +1,107 @@
 package it.unibo.memory.controller;
- 
+
+import javax.swing.Timer;
 import it.unibo.memory.model.Board;
 import it.unibo.memory.model.Card;
 import it.unibo.memory.model.Game;
- 
+import it.unibo.memory.view.StatoPanel;
+
 public class GameController {
- 
-    private final Board board;  // il tabellone con tutte le carte
-    private final Game game;    // lo stato della partita
-    private Card firstCard;     // la prima carta cliccata (null = nessuna carta in mano)
- 
-    // Nasce il controller, riceve il tabellone e lo stato della partita
-    public GameController(final Board board, final Game game) {
+
+    private final Board board;
+    private final Game game;
+    private final Runnable onGameOver;
+    private final Runnable onBoardChanged;
+    private Card firstCard;
+    private boolean waiting;
+    private StatoPanel statoPanel; // Riferimento al componente di visualizzazione delle statistiche
+
+    public GameController(final Board board, final Game game, final Runnable onBoardChanged, final Runnable onGameOver) {
         this.board = board;
         this.game = game;
+        this.onBoardChanged = onBoardChanged;
+        this.onGameOver = onGameOver;
         this.firstCard = null;
+        this.waiting = false;
     }
- 
-    // Gestisce il click su una carta
+
+    /**
+     * Collega lo StatoPanel al controller per aggiornare mosse e punteggio.
+     */
+    public void setStatoPanel(StatoPanel panel) {
+        this.statoPanel = panel;
+    }
+
     public void onCardClicked(final int position) {
-        Card clicked = board.getCard(position); // prendo la carta cliccata dal tabellone
- 
-        // Se la carta è già girata o già abbinata, il click va a vuoto
-        if (clicked.isFaceUp() || clicked.isMatched()) {
-            return;
-        }
- 
-        clicked.flip(); // gira la carta faccia in su
- 
-        // È la PRIMA carta che scopro nel mio turno?
+        if (waiting) return;
+
+        Card clicked = board.getCard(position);
+        if (clicked.isFaceUp() || clicked.isMatched()) return;
+
+        clicked.flip();
+
         if (firstCard == null) {
-            firstCard = clicked; // me la salvo in mano e aspetto il secondo click
- 
+            // PRIMA CARTA GIRATA
+            firstCard = clicked;
+            onBoardChanged.run();
         } else {
-            // È la SECONDA carta! Ora si fa sul serio.
-            game.addMove(); // aggiungo una mossa al conteggio globale
- 
-            // 1. Uso di equals: usiamo il nostro equals() per confrontare i simboli!
+            // SECONDA CARTA GIRATA
+            game.addMove(); // Incrementa mosse nel modello
+            
+            // Aggiorno la logica di visualizzazione dello stato del gioco
+            aggiornaInterfacciaManu();
+
             if (clicked.equals(firstCard)) {
-               
-                // 2. AGGIORNATO: diciamo alla carta che è stata indovinata (true)
-                clicked.setMatched(true);      
-                firstCard.setMatched(true);    
-                game.addMatchedPair();     // dico a Game che ho trovato una coppia in più
- 
+                // COPPIA TROVATA
+                clicked.setMatched(true);
+                firstCard.setMatched(true);
+                game.addMatchedPair(); // Incrementa coppie nel modello
+                
+                
+                aggiornaInterfacciaManu();
+                
+                resetTurn();
+                onBoardChanged.run();
+
+                if (game.getMatchedPairs() == board.getDifficulty().totalPairs()) {
+                    if (this.statoPanel != null) {
+                        this.statoPanel.setStato("VITTORIA!");
+                    }
+                    onGameOver.run();
+                }
             } else {
-                // 3. AGGIORNATO: usiamo il nostro flip() per rigirarle entrambe a faccia in giù
-                clicked.flip();        
-                firstCard.flip();      
+                // COPPIE DIVERSE
+                onBoardChanged.run();
+                waiting = true;
+                //Imposto un tempo per evitare che l'utente clicca più carte che siano fuori dalla coppia
+                Timer timer = new Timer(500, e -> {
+                    clicked.flip();
+                    firstCard.flip();
+                    resetTurn();
+                    onBoardChanged.run();
+                });
+                timer.setRepeats(false);
+                timer.start();
             }
- 
-            // In ogni caso, il turno è finito, svuoto la mano per il turno successivo
-            firstCard = null;
         }
     }
+
+    /**
+     * Metodo di supporto per inviare i dati corretti allo StatoPanel
+     */
+    private void aggiornaInterfacciaManu() {
+        if (this.statoPanel != null) {
+            this.statoPanel.setMosse(game.getMoves());
+            this.statoPanel.setCoppie(game.getMatchedPairs(), board.getDifficulty().totalPairs());
+        }
+    }
+
+    private void resetTurn() {
+        this.firstCard = null;
+        this.waiting = false;
+    }
+
+    public boolean isGameOver() { return game.isGameOver(); }
+    public int getMoves() { return game.getMoves(); }
+    public int getMatchedPairs() { return game.getMatchedPairs(); }
 }
