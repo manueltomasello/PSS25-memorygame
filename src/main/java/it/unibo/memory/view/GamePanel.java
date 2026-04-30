@@ -22,7 +22,7 @@ public class GamePanel extends JPanel {
         this.board = board;
         this.controller = controller;
 
-        final int totalCards = board.getDifficulty().totalCards();
+        final int totalCards = board.getSize();
         this.buttons = new JButton[totalCards];
 
         // Impostazione griglia dinamica basata sulla difficoltà

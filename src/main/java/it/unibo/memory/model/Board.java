@@ -51,4 +51,5 @@ public class Board {
     public int getSize() {
         return cards.length;
     }
- //rimosso meccanismo di vittoria, ci pensa il controller
+}
+//rimosso meccanismo di vittoria, ci pensa il controller
