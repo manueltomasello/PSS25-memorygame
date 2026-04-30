@@ -104,4 +104,20 @@ public class GameController {
     public boolean isGameOver() { return game.isGameOver(); }
     public int getMoves() { return game.getMoves(); }
     public int getMatchedPairs() { return game.getMatchedPairs(); }
+
+public void gestisciVittoria() {
+    if (this.isGameOver()) {
+        // Recuperiamo la frase dal nostro nuovo servizio
+        String messaggio = it.unibo.memory.util.GestoreCitazioni.getCitazioneCasuale();
+        
+        // Mostriamo la finestra pop-up (View)
+        javax.swing.JOptionPane.showMessageDialog(
+            null, 
+            messaggio, 
+            "Complimenti! Hai Vinto!", 
+            javax.swing.JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+}
+
 }
