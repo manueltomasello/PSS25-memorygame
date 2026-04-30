@@ -6,12 +6,13 @@ public class Board {
 
     private final Card[] cards;
     private final Random rand = new Random();
-    private final Difficulty difficulty; // Variabile salvata per permettere alla View di leggere i dati
+    private final Difficulty difficulty;
+
 
     public Board(final Difficulty diff) {
-        this.difficulty = diff; // Memorizziamo la difficoltà scelta
-        this.cards = new Card[diff.totalCards()]; // Usiamo il totale carte dall'Enum
-        genCards(diff.totalPairs()); // Generiamo le coppie
+        this.difficulty = diff;
+        this.cards = new Card[diff.totalPairs() * 2];
+        genCards(diff.totalPairs());
     }
 
     /**
@@ -50,4 +51,4 @@ public class Board {
     public int getSize() {
         return cards.length;
     }
-}
+ //rimosso meccanismo di vittoria, ci pensa il controller
