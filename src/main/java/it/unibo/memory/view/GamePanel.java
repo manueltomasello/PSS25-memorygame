@@ -14,13 +14,11 @@ public class GamePanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
-    private final GameController controller;
     private final Board board; 
     private final JButton[] buttons;
 
     public GamePanel(final Board board, final GameController controller) {
         this.board = board;
-        this.controller = controller;
 
         final int totalCards = board.getSize();
         this.buttons = new JButton[totalCards];

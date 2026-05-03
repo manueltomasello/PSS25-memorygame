@@ -18,6 +18,9 @@ import javax.swing.SwingConstants;
 import it.unibo.memory.model.Difficulty;
 import it.unibo.memory.util.ScoreManager;
 
+
+ //Finestra di fine partita: mostra il punteggio, il record e i pulsanti di navigazione
+ 
 public class EndGameDialog extends JDialog {
 
     public EndGameDialog(
@@ -27,38 +30,39 @@ public class EndGameDialog extends JDialog {
             final ScoreManager scoreManager,
             final Runnable onNewGame,
             final Runnable onMenu) {
-
+        // true = dialog blocca la finestra padre finché non viene chiusa
         super(parent, "Partita Terminata", true);
 
+        // Aggiorna il record e controlla se è stato battuto
         final boolean newRecord = scoreManager.updateIfBetter(difficulty, moves);
-
+        // finestra       
         final JPanel content = new JPanel();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
-
+        // vittoria
         final JLabel title = new JLabel("VITTORIA!", SwingConstants.CENTER);
         title.setFont(title.getFont().deriveFont(Font.BOLD, 24f));
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         content.add(title);
         content.add(Box.createVerticalStrut(12));
-
+        //diff
         final JLabel diffLabel = new JLabel("Difficoltà: " + difficulty.name(), SwingConstants.CENTER);
         diffLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         content.add(diffLabel);
         content.add(Box.createVerticalStrut(8));
-
+        //mosse
         final JLabel movesLabel = new JLabel("Le tue mosse: " + moves, SwingConstants.CENTER);
         movesLabel.setFont(movesLabel.getFont().deriveFont(Font.BOLD, 16f));
         movesLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         content.add(movesLabel);
         content.add(Box.createVerticalStrut(8));
-
+        //record
         final JLabel recordLabel = new JLabel(
                 "Record " + difficulty.name() + ": " + scoreManager.getBestScoreText(difficulty),
                 SwingConstants.CENTER);
         recordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         content.add(recordLabel);
-
+        //condzione nuovo record
         if (newRecord) {
             content.add(Box.createVerticalStrut(8));
             final JLabel newRecordLabel = new JLabel("Nuovo Record!", SwingConstants.CENTER);
@@ -69,7 +73,7 @@ public class EndGameDialog extends JDialog {
         }
 
         content.add(Box.createVerticalStrut(20));
-
+        //bottoni per andare a menù o iniziare una nuova partita
         final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         final JButton newGameBtn = new JButton("Nuova Partita");
         newGameBtn.addActionListener(e -> { dispose(); onNewGame.run(); });
@@ -86,4 +90,3 @@ public class EndGameDialog extends JDialog {
         setResizable(false);
     }
 }
-// manca l'integrazione con l'api per la frase randomica

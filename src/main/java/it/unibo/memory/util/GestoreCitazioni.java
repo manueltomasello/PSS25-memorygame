@@ -1,31 +1,29 @@
 package it.unibo.memory.util;
 
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.Scanner;
 
 public class GestoreCitazioni {
 
-    // Indirizzo preciso a cui chiediamo la citazione (Endpoint)
+    // Indirizzo richiesta API
     private static final String URL_API = "https://dummyjson.com/quotes/random";
 
-    /**
-     * Creo una richiesta HTTP GET per recuperare una citazione casuale.
-     * @return La stringa della citazione o una frase di backup in caso di errore.
-     */
+    //1. faccio una http get  
     public static String getCitazioneCasuale() {
         try {
-            // 1. Preparo la connessione (Request)
-            URL url = new URL(URL_API);
+            //nel try faccio la richiesta http
+            URL url = URI.create(URL_API).toURL();
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setConnectTimeout(5000); // Timeout di 5 secondi per non bloccare il gioco
 
-            // 2. Controllo del Response Code (tramite codice di stato http 200 mi accerto che la connessione sia andata a buon fine)
+            //2. se http ci restituisce 200 tutto ok! altrimenti restituisci la default frase
             if (conn.getResponseCode() != 200) {
                 return "La logica ti porterà da A a B. L'immaginazione ovunque.";
             }
-
+            //la gestione della stringa viene da Ai 
             // 3. Lettura del flusso di dati (InputStream mi occupo di leggere il flusso di byte trasformandolo in una stringa leggibile riga dopo riga)
             Scanner scanner = new Scanner(conn.getInputStream());
             StringBuilder risposta = new StringBuilder();
