@@ -56,3 +56,14 @@ tasks.withType<Test>().configureEach {
         showStandardStreams = true // Show the standard output
     }
 }
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
+}
+
+tasks.withType<JavaExec> {
+    jvmArgs("-Dfile.encoding=UTF-8")
+}
+
+tasks.withType<Test> {
+    systemProperty("file.encoding", "UTF-8")
+}
