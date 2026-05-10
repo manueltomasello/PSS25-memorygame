@@ -12,6 +12,7 @@ public class Board {
     public Board(final Difficulty diff) {
         this.difficulty = diff;
         this.cards = new Card[diff.totalPairs() * 2];
+        // da modificare cioè posso usare totalcards() ma va bene uguale
         genCards(diff.totalPairs());
     }
 
