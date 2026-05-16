@@ -66,7 +66,7 @@ public class GameController {
                 if (game.getMatchedPairs() == board.getDifficulty().totalPairs()) {
                     if (this.statoPanel != null) {
                         this.statoPanel.setStato("VITTORIA!");
-                        this.gestisciVittoria();
+
                     }
                     onGameOver.run();
                     
@@ -107,21 +107,5 @@ public class GameController {
     public int getMoves() { return game.getMoves(); }
     public int getMatchedPairs() { return game.getMatchedPairs(); }
 
-public void gestisciVittoria(){
-    if (this.isGameOver()) {
-        // Recupero la frase dal nostro nuovo servizio
-        /*String messaggio = it.unibo.memory.util.GestoreCitazioni.getCitazioneCasuale();*/
-        // Recupero e associo mosse utente più frase dal web
-        String messaggio = "Vittoria in " + this.getMoves() + " mosse!\n\nCitazione: " + it.unibo.memory.util.GestoreCitazioni.getCitazioneCasuale();
-        
-        // Mostriamo la finestra pop-up (View)
-        javax.swing.JOptionPane.showMessageDialog(
-            null, 
-            messaggio, 
-            "Complimenti! Hai Vinto!", 
-            javax.swing.JOptionPane.INFORMATION_MESSAGE
-        );
-    }
-}
-
+    
 }
